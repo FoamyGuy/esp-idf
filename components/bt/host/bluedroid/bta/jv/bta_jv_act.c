@@ -2067,6 +2067,13 @@ static void bta_jv_port_event_sr_cback(UINT32 code, UINT16 port_handle)
         p_cb->p_cback(BTA_JV_RFCOMM_CONG_EVT, &evt_data, user_data);
     }
 
+    if (code & (PORT_EV_DSR | PORT_EV_CTS | PORT_EV_RING | PORT_EV_RLSD | PORT_EV_BREAK)) {
+        evt_data.rfc_control_ind.status = BTA_JV_SUCCESS;
+        evt_data.rfc_control_ind.handle = p_pcb->handle;
+        evt_data.rfc_control_ind.event = code;
+        p_cb->p_cback(BTA_JV_RFCOMM_CONTROL_IND_EVT, &evt_data, user_data);
+    }
+
     if (code & PORT_EV_TXEMPTY) {
         bta_jv_pm_conn_idle(p_pcb->p_pm_cb);
     }

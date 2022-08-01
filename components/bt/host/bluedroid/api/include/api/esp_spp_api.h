@@ -77,6 +77,9 @@ typedef enum {
     ESP_SPP_WRITE_EVT                   = 33,               /*!< When SPP write operation completes, the event comes, only for ESP_SPP_MODE_CB */
     ESP_SPP_SRV_OPEN_EVT                = 34,               /*!< When SPP Server connection open, the event comes */
     ESP_SPP_SRV_STOP_EVT                = 35,               /*!< When SPP server stopped, the event comes */
+
+    ESP_SPP_CONTROL_IND_EVT             = 36,
+    ESP_SPP_PORTNEG_IND_EVT             = 37,
 } esp_spp_cb_event_t;
 
 
@@ -195,6 +198,12 @@ typedef union {
         uint32_t            handle;         /*!< The connection handle */
         bool                cong;           /*!< TRUE, congested. FALSE, uncongested */
     } cong;                                 /*!< SPP callback param of ESP_SPP_CONG_EVT */
+
+    struct spp_control_ind_evt_param {
+        esp_spp_status_t    status;         /*!< status */
+        uint32_t            handle;         /*!< The connection handle */
+        uint32_t            event;
+    } control_ind;
 } esp_spp_cb_param_t;                       /*!< SPP callback parameter union type */
 
 /**

@@ -160,7 +160,10 @@ typedef UINT8 tBTA_JV_CONN_STATE;
 #define BTA_JV_RFCOMM_WRITE_EVT     33 /* the result for BTA_JvRfcommWrite*/
 #define BTA_JV_RFCOMM_SRV_OPEN_EVT  34 /* open status of Server RFCOMM connection */
 #define BTA_JV_FREE_SCN_EVT         35 /* FREE an SCN */
-#define BTA_JV_MAX_EVT              36 /* max number of JV events */
+#define BTA_JV_RFCOMM_CONTROL_IND_EVT 36 /* hathach: RFCOMM ControlInd: DTR, RTS, RI, DCD */
+#define BTA_JV_RFCOMM_PORTNEG_IND_EVT 37 /* hathach: RFCOMM PortNegInd: baudrate, stop, parity */
+#define BTA_JV_MAX_EVT              38 /* max number of JV events */
+
 
 typedef UINT16 tBTA_JV_EVT;
 
@@ -332,6 +335,13 @@ typedef struct {
     BOOLEAN         cong;       /* TRUE, congested. FALSE, uncongested */
 } tBTA_JV_RFCOMM_CONG;
 
+/* hathach */
+typedef struct {
+    tBTA_JV_STATUS  status;
+    UINT32          handle;
+    UINT32          event;
+} tBTA_JV_RFCOMM_CONTROL_IND;
+
 /* data associated with BTA_JV_RFCOMM_READ_EVT */
 typedef struct {
     tBTA_JV_STATUS  status;     /* Whether the operation succeeded or failed. */
@@ -412,6 +422,8 @@ typedef union {
     tBTA_JV_RFCOMM_WRITE    rfc_write;      /* BTA_JV_RFCOMM_WRITE_EVT */
     tBTA_JV_DATA_IND        data_ind;       /* BTA_JV_L2CAP_DATA_IND_EVT
                                                BTA_JV_RFCOMM_DATA_IND_EVT */
+    tBTA_JV_RFCOMM_CONTROL_IND rfc_control_ind; /* hathach BTA_JV_RFCOMM_CONTROL_IND_EVT */
+
     tBTA_JV_FREE_SCN        free_scn;       /* BTA_JV_FREE_SCN_EVT */
 #if BTA_JV_L2CAP_INCLUDED
     tBTA_JV_L2CAP_LE_OPEN      l2c_le_open;     /* BTA_JV_L2CAP_OPEN_EVT */
