@@ -342,6 +342,13 @@ typedef struct {
     UINT32          event;
 } tBTA_JV_RFCOMM_CONTROL_IND;
 
+/* hathach */
+typedef struct {
+    tBTA_JV_STATUS  status;
+    UINT32          handle;
+    UINT8           port_state[9]; // following tPORT_STATE layout
+} tBTA_JV_RFCOMM_PORTNEG_IND;
+
 /* data associated with BTA_JV_RFCOMM_READ_EVT */
 typedef struct {
     tBTA_JV_STATUS  status;     /* Whether the operation succeeded or failed. */
@@ -423,6 +430,7 @@ typedef union {
     tBTA_JV_DATA_IND        data_ind;       /* BTA_JV_L2CAP_DATA_IND_EVT
                                                BTA_JV_RFCOMM_DATA_IND_EVT */
     tBTA_JV_RFCOMM_CONTROL_IND rfc_control_ind; /* hathach BTA_JV_RFCOMM_CONTROL_IND_EVT */
+    tBTA_JV_RFCOMM_PORTNEG_IND rfc_portneg_ind; /* hathach BTA_JV_RFCOMM_PORTNEG_IND_EVT */
 
     tBTA_JV_FREE_SCN        free_scn;       /* BTA_JV_FREE_SCN_EVT */
 #if BTA_JV_L2CAP_INCLUDED

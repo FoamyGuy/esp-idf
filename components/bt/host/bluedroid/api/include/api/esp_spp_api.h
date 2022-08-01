@@ -199,11 +199,19 @@ typedef union {
         bool                cong;           /*!< TRUE, congested. FALSE, uncongested */
     } cong;                                 /*!< SPP callback param of ESP_SPP_CONG_EVT */
 
+    /* hathach */
     struct spp_control_ind_evt_param {
         esp_spp_status_t    status;         /*!< status */
         uint32_t            handle;         /*!< The connection handle */
         uint32_t            event;
     } control_ind;
+
+    struct spp_portneg_ind_evt_param {
+        esp_spp_status_t    status;         /*!< status */
+        uint32_t            handle;         /*!< The connection handle */
+        uint8_t             port_state[9]; // following tPORT_STATE layout
+    } portneg_ind;
+
 } esp_spp_cb_param_t;                       /*!< SPP callback parameter union type */
 
 /**

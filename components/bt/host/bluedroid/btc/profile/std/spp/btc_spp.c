@@ -1272,6 +1272,16 @@ void btc_spp_cb_handler(btc_msg_t *msg)
         }
         break;
 
+    case BTA_JV_RFCOMM_PORTNEG_IND_EVT:
+        if (spp_local_param.spp_mode == ESP_SPP_MODE_CB) {
+            param.portneg_ind.status = p_data->rfc_portneg_ind.status;
+            param.portneg_ind.handle = p_data->rfc_portneg_ind.handle;
+            memcpy(param.portneg_ind.port_state, p_data->rfc_portneg_ind.port_state, sizeof(param.portneg_ind.port_state));
+
+            btc_spp_cb_to_app(ESP_SPP_PORTNEG_IND_EVT, &param);
+        }
+        break;
+
     default:
         BTC_TRACE_DEBUG("%s: Unhandled event (%d)!", __FUNCTION__, msg->act);
         break;

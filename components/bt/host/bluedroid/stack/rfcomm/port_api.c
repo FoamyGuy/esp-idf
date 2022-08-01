@@ -674,6 +674,31 @@ int PORT_GetState (UINT16 handle, tPORT_STATE *p_settings)
 }
 
 
+int PORT_GetPeerState (UINT16 handle, tPORT_STATE *p_settings)
+{
+    tPORT      *p_port;
+
+    RFCOMM_TRACE_API ("PORT_GetPeerState() handle:%d", handle);
+
+    /* Check if handle is valid to avoid crashing */
+    if ((handle == 0) || (handle > MAX_RFC_PORTS)) {
+        return (PORT_BAD_HANDLE);
+    }
+
+    p_port = &rfc_cb.port.port[handle - 1];
+
+    if (!p_port->in_use || (p_port->state == PORT_STATE_CLOSED)) {
+        return (PORT_NOT_OPENED);
+    }
+
+    if (p_port->line_status) {
+        return (PORT_LINE_ERR);
+    }
+
+    *p_settings = p_port->peer_port_pars;
+    return (PORT_SUCCESS);
+}
+
 /*******************************************************************************
 **
 ** Function         PORT_Control

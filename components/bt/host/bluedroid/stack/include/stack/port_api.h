@@ -140,6 +140,8 @@ typedef struct {
 #define PORT_EV_FC      0x00010000   /* data flow enabled flag changed by remote */
 #define PORT_EV_FCS     0x00020000   /* data flow enable status true = enabled */
 
+#define PORT_EV_PORTNEG 0x01000000   /* hathach PORT_PortNegInd */
+
 /*
 ** To register for events application should provide bitmask with
 ** corresponding bit set
@@ -380,6 +382,9 @@ extern int PORT_GetRxQueueCnt (UINT16 handle, UINT16 *p_rx_queue_count);
 **
 *******************************************************************************/
 extern int PORT_GetState (UINT16 handle, tPORT_STATE *p_settings);
+
+// hathach
+extern int PORT_GetPeerState (UINT16 handle, tPORT_STATE *p_settings);
 
 
 /*******************************************************************************

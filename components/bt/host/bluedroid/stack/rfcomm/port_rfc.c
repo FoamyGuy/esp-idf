@@ -554,6 +554,8 @@ void PORT_PortNegInd (tRFC_MCB *p_mcb, UINT8 dlci, tPORT_STATE *p_pars,
     tPORT *p_port = port_find_mcb_dlci_port (p_mcb, dlci);
 
     RFCOMM_TRACE_EVENT ("PORT_PortNegInd");
+    RFCOMM_TRACE_EVENT ("baudrate = %u, byte = %u, stop = %u, parity = %u, parity_type = %u, fc_type = %u",
+                        p_pars->baud_rate, p_pars->byte_size, p_pars->stop_bits, p_pars->parity, p_pars->parity_type, p_pars->fc_type);
 
     if (!p_port) {
         /* This can be a first request for this port */
@@ -568,6 +570,10 @@ void PORT_PortNegInd (tRFC_MCB *p_mcb, UINT8 dlci, tPORT_STATE *p_pars,
     /* Check if the flow control is acceptable on local side */
     p_port->peer_port_pars = *p_pars;
     RFCOMM_PortNegRsp (p_mcb, dlci, p_pars, param_mask);
+
+    if (p_port->p_callback) {
+        (p_port->p_callback)(PORT_EV_PORTNEG, p_port->inx);
+    }
 }
 
 
