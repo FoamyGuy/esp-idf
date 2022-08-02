@@ -203,7 +203,8 @@ typedef union {
     struct spp_control_ind_evt_param {
         esp_spp_status_t    status;         /*!< status */
         uint32_t            handle;         /*!< The connection handle */
-        uint32_t            event;
+        uint8_t             modem_signal_change;
+        uint8_t             modem_signal;
     } control_ind;
 
     struct spp_portneg_ind_evt_param {

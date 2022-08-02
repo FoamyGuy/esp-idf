@@ -339,7 +339,8 @@ typedef struct {
 typedef struct {
     tBTA_JV_STATUS  status;
     UINT32          handle;
-    UINT32          event;
+    UINT8           modem_signal_change;
+    UINT8           modem_signal;
 } tBTA_JV_RFCOMM_CONTROL_IND;
 
 /* hathach */

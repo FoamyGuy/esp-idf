@@ -2070,7 +2070,17 @@ static void bta_jv_port_event_sr_cback(UINT32 code, UINT16 port_handle)
     if (code & (PORT_EV_DSR | PORT_EV_CTS | PORT_EV_RING | PORT_EV_RLSD | PORT_EV_BREAK)) {
         evt_data.rfc_control_ind.status = BTA_JV_SUCCESS;
         evt_data.rfc_control_ind.handle = p_pcb->handle;
-        evt_data.rfc_control_ind.event = code;
+
+        UINT8 changed_signals = 0;
+        if ( code & PORT_EV_DSR ) changed_signals |= PORT_DTRDSR_ON;
+        if ( code & PORT_EV_CTS ) changed_signals |= PORT_CTSRTS_ON;
+
+        if ( code & PORT_EV_RING ) changed_signals |= PORT_RING_ON;
+        if ( code & PORT_EV_RLSD ) changed_signals |= PORT_DCD_ON;
+
+        evt_data.rfc_control_ind.modem_signal_change = changed_signals;
+        PORT_GetModemStatus(port_handle, &evt_data.rfc_control_ind.modem_signal);
+
         p_cb->p_cback(BTA_JV_RFCOMM_CONTROL_IND_EVT, &evt_data, user_data);
     }
 

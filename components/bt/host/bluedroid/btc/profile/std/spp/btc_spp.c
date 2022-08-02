@@ -1267,7 +1267,8 @@ void btc_spp_cb_handler(btc_msg_t *msg)
         if (spp_local_param.spp_mode == ESP_SPP_MODE_CB) {
             param.control_ind.status = p_data->rfc_control_ind.status;
             param.control_ind.handle = p_data->rfc_control_ind.handle;
-            param.control_ind.event = p_data->rfc_control_ind.event;
+            param.control_ind.modem_signal_change = p_data->rfc_control_ind.modem_signal_change;
+            param.control_ind.modem_signal = p_data->rfc_control_ind.modem_signal;
             btc_spp_cb_to_app(ESP_SPP_CONTROL_IND_EVT, &param);
         }
         break;
