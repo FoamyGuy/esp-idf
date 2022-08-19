@@ -749,3 +749,4 @@ esp_err_t rgb_panel_flush_buffer(esp_lcd_panel_t *panel) {
 
     return ESP_OK;
 }
+#endif
