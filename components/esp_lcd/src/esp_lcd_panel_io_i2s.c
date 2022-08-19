@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Although we're manipulating I2S peripheral (on esp32/s2 target), it has nothing to do with the AUDIO BUS.
 // In fact, we're simulating the Intel 8080 bus with I2S peripheral, in a special parallel mode.
@@ -16,6 +14,12 @@
 #include <sys/cdefs.h>
 #include <sys/param.h>
 #include <sys/queue.h>
+#include "sdkconfig.h"
+#if CONFIG_LCD_ENABLE_DEBUG_LOG
+// The local log level must be defined before including esp_log.h
+// Set the maximum log level for this source file
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
+#endif
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -32,8 +36,7 @@
 #include "hal/dma_types.h"
 #include "hal/gpio_hal.h"
 #include "driver/gpio.h"
-#include "driver/periph_ctrl.h"
-#if SOC_I2S_LCD_I80_VARIANT
+#include "esp_private/periph_ctrl.h"
 #include "esp_private/i2s_platform.h"
 #include "soc/lcd_periph.h"
 #include "hal/i2s_hal.h"
@@ -117,6 +120,9 @@ struct lcd_panel_io_i80_t {
 
 esp_err_t esp_lcd_new_i80_bus(const esp_lcd_i80_bus_config_t *bus_config, esp_lcd_i80_bus_handle_t *ret_bus)
 {
+#if CONFIG_LCD_ENABLE_DEBUG_LOG
+    esp_log_level_set(TAG, ESP_LOG_DEBUG);
+#endif
     esp_err_t ret = ESP_OK;
     esp_lcd_i80_bus_t *bus = NULL;
     ESP_GOTO_ON_FALSE(bus_config && ret_bus, ESP_ERR_INVALID_ARG, err, TAG, "invalid argument");
@@ -598,12 +604,7 @@ static esp_err_t i2s_lcd_select_periph_clock(esp_lcd_i80_bus_handle_t bus, lcd_c
         ESP_RETURN_ON_FALSE(false, ESP_ERR_NOT_SUPPORTED, TAG, "unsupported clock source: %d", src);
         break;
     }
-    i2s_ll_mclk_div_t clk_cal_config = {
-        .mclk_div = LCD_PERIPH_CLOCK_PRE_SCALE,
-        .a = 1,
-        .b = 0,
-    };
-    i2s_ll_tx_set_clk(bus->hal.dev, &clk_cal_config);
+    i2s_ll_set_raw_mclk_div(bus->hal.dev, LCD_PERIPH_CLOCK_PRE_SCALE, 1, 0);
     return ret;
 }
 
@@ -762,5 +763,3 @@ static IRAM_ATTR void lcd_default_isr_handler(void *args)
         portYIELD_FROM_ISR();
     }
 }
-
-#endif // SOC_I2S_LCD_I80_VARIANT
